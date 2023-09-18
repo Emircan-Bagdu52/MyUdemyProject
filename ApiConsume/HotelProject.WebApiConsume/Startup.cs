@@ -31,6 +31,7 @@ namespace HotelProject.WebApiConsume
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<Context>();
+
             services.AddScoped<IStaffDal, EfStaffDal>();
             services.AddScoped<IStaffService, StaffManager>();
 
@@ -45,6 +46,14 @@ namespace HotelProject.WebApiConsume
 
             services.AddScoped<ITestimonialDal, EfTestimonialDal>();
             services.AddScoped<ITestimonialService, TestimonialManager>();
+
+            services.AddCors(opt =>
+            {
+                opt.AddPolicy("OtelApiCors", opts =>
+                {
+                    opts.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                });
+            });
 
 
             services.AddControllers();
@@ -65,7 +74,7 @@ namespace HotelProject.WebApiConsume
             }
 
             app.UseRouting();
-
+            app.UseCors("OtelApiCors");
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
